@@ -96,34 +96,38 @@ send_periodic_notification() {
         2>/dev/null
 }
 
-# Main loop / 主循环
-while true; do
-    sleep "$CHECK_INTERVAL"
+# Main loop function / 主循环函数
+main_loop() {
+    while true; do
+        sleep "$CHECK_INTERVAL"
 
-    # Check if task is still running / 检查任务是否还在运行
-    if ! is_task_running "$SESSION_ID"; then
-        break
-    fi
+        # Check if task is still running / 检查任务是否还在运行
+        if ! is_task_running "$SESSION_ID"; then
+            break
+        fi
 
-    # Check if waiting for input / 检查是否在等待输入状态
-    if is_waiting_input "$SESSION_ID"; then
-        continue
-    fi
+        # Check if waiting for input / 检查是否在等待输入状态
+        if is_waiting_input "$SESSION_ID"; then
+            continue
+        fi
 
-    # Check if should suppress / 检查是否应该抑制
-    if should_suppress "$SESSION_ID" "running"; then
-        continue
-    fi
+        # Check if should suppress / 检查是否应该抑制
+        if should_suppress "$SESSION_ID" "running"; then
+            continue
+        fi
 
-    # Check if notification interval reached / 检查是否到达通知间隔
-    local last_time
-    last_time=$(get_last_periodic_time "$SESSION_ID")
-    local now
-    now=$(date +%s)
-    local interval_seconds=$((CC_NOTIFY_RUNNING_INTERVAL * 60))
+        # Check if notification interval reached / 检查是否到达通知间隔
+        local last_time
+        last_time=$(get_last_periodic_time "$SESSION_ID")
+        local now
+        now=$(date +%s)
+        local interval_seconds=$((CC_NOTIFY_RUNNING_INTERVAL * 60))
 
-    if (( now - last_time >= interval_seconds )); then
-        send_periodic_notification
-        update_last_periodic_time "$SESSION_ID"
-    fi
-done
+        if (( now - last_time >= interval_seconds )); then
+            send_periodic_notification
+            update_last_periodic_time "$SESSION_ID"
+        fi
+    done
+}
+
+main_loop
