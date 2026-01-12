@@ -119,8 +119,9 @@ load_all_config() {
     CC_NOTIFY_PROMPT_MAX_CHARS=$(get_config_int "text" "prompt_max_chars" "${DEFAULT_PROMPT_MAX_CHARS:-60}")
 
     # Running / 运行中通知
+    # 如果环境变量已设置则保留，否则从配置文件读取
     export CC_NOTIFY_RUNNING_ENABLED
-    CC_NOTIFY_RUNNING_ENABLED=$(get_config_bool "running" "enabled" "1")
+    CC_NOTIFY_RUNNING_ENABLED="${CC_NOTIFY_RUNNING_ENABLED:-$(get_config_bool "running" "enabled" "1")}"
     export CC_NOTIFY_RUNNING_INTERVAL
     CC_NOTIFY_RUNNING_INTERVAL=$(get_config_int "running" "interval_minutes" "${DEFAULT_RUNNING_INTERVAL:-5}")
     export CC_NOTIFY_RUNNING_SOUND

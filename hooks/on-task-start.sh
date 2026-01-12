@@ -65,9 +65,17 @@ if [[ "$CC_NOTIFY_RUNNING_ENABLED" == "1" ]]; then
     MONITOR_SCRIPT="${BASE_DIR}/lib/periodic-monitor.sh"
 
     # Kill any existing monitor process / 杀掉可能存在的旧监控进程
+    # 确保旧进程被正确终止，避免多个监控进程同时运行
     OLD_PID=$(get_monitor_pid "$SESSION_ID")
-    if [[ -n "$OLD_PID" ]]; then
+    if [[ -n "$OLD_PID" ]] && [[ -d "/proc/$OLD_PID" ]]; then
         kill "$OLD_PID" 2>/dev/null
+        # 等待最多 1 秒
+        for _ in {1..10}; do
+            [[ ! -d "/proc/$OLD_PID" ]] && break
+            sleep 0.1
+        done
+        # 如果仍存在，强制终止
+        [[ -d "/proc/$OLD_PID" ]] && kill -9 "$OLD_PID" 2>/dev/null
     fi
 
     # Start new monitor process / 启动新的监控进程

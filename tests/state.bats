@@ -145,12 +145,13 @@ load 'test_helper'
     [ ! -f "$STATE_BASE_DIR/test-session/waiting-input" ]
 }
 
-@test "clear_waiting_input resets periodic timer" {
+@test "clear_waiting_input preserves periodic timer" {
     init_state "test-session"
     atomic_write "$STATE_BASE_DIR/test-session/last-periodic-time" "1000"
     clear_waiting_input "test-session"
     new_time=$(cat "$STATE_BASE_DIR/test-session/last-periodic-time")
-    [ "$new_time" -gt 1000 ]
+    # 计时器不应被重置，应保持原值
+    [ "$new_time" -eq 1000 ]
 }
 
 # is_task_running tests

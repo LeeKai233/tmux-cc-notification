@@ -8,6 +8,9 @@ setup() {
     export TEST_TEMP_DIR=$(mktemp -d "/tmp/cc-notify-test-XXXXXX")
     export STATE_BASE_DIR="$TEST_TEMP_DIR"
 
+    # 禁用监控进程启动，防止测试产生残留进程
+    export CC_NOTIFY_RUNNING_ENABLED=0
+
     # Source library files
     source "${LIB_DIR}/validate.sh"
     source "${LIB_DIR}/sanitize.sh"
@@ -119,7 +122,7 @@ EOF
     [ -f "$STATE_BASE_DIR/tool-test/waiting-input" ]
 }
 
-@test "on-tool-use resets periodic timer" {
+@test "on-tool-use preserves periodic timer" {
     init_state "tool-test"
     set_waiting_input "tool-test"
     atomic_write "$STATE_BASE_DIR/tool-test/last-periodic-time" "1000"
@@ -128,7 +131,8 @@ EOF
         STATE_BASE_DIR="$STATE_BASE_DIR" bash "$HOOKS_DIR/on-tool-use.sh"
 
     new_time=$(cat "$STATE_BASE_DIR/tool-test/last-periodic-time")
-    [ "$new_time" -gt 1000 ]
+    # 计时器不应被重置，应保持原值
+    [ "$new_time" -eq 1000 ]
 }
 
 # on-need-input.sh tests

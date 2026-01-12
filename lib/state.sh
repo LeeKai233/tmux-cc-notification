@@ -201,13 +201,12 @@ set_waiting_input() {
 }
 
 # Clear waiting input state / 清除等待输入状态
+# 不再重置周期通知计时器，保持稳定的 5 分钟间隔
 clear_waiting_input() {
     local session_id="$1"
     local state_dir
     state_dir=$(get_state_dir "$session_id")
     rm -f "${state_dir}/waiting-input"
-    # Reset periodic notification timer / 重置周期通知计时
-    atomic_write "${state_dir}/last-periodic-time" "$(date +%s)"
 }
 
 # Check if waiting for input / 检查是否在等待输入状态
