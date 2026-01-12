@@ -2,10 +2,10 @@
 # 通知配置文件
 
 [assets]
-# Path to app logo image (optional)
-app_logo = "./imgs/Cleopatra.jpeg"
-# Path to hero image for task completion (optional)
-hero_image_task_end = "./imgs/Asuka.jpeg"
+# Windows path to app logo image (optional)
+app_logo = ""
+# Windows path to hero image for task completion (optional)
+hero_image_task_end = ""
 
 [text]
 # Title template ({session} = tmux session name)
