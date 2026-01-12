@@ -1,0 +1,45 @@
+# tmux + Claude Code + Windows Toast notification config
+# 通知配置文件
+
+[assets]
+# Path to app logo image (optional)
+app_logo = ""
+# Path to hero image for task completion (optional)
+hero_image_task_end = ""
+
+[text]
+# Title template ({session} = tmux session name)
+title = "{session} Claude Code"
+# Running notification body ({mm} = minutes, {prompt} = user prompt)
+running_body = "[Running: {mm} min] {prompt}"
+# Done notification body
+done_body = "[Completed: {mm} min] {prompt}"
+# Need input notification body
+need_input_body = "Waiting for confirmation"
+# Max characters for prompt display
+prompt_max_chars = 60
+time_format = "YYYY-MM-DD HH:MM"
+
+[running]
+enabled = true
+interval_minutes = 5
+sound_path = "C:\\Windows\\Media\\chimes.wav"
+sound_repeat = 1
+update_same_toast = true
+
+[need_input]
+enabled = true
+sound_path = "C:\\Windows\\Media\\notify.wav"
+sound_repeat = 2
+
+[done]
+enabled = true
+sound_path = "C:\\Windows\\Media\\tada.wav"
+sound_repeat = 1
+
+[suppress]
+enabled = true
+
+[security]
+# PowerShell execution policy (Bypass needed for WSL scripts)
+pwsh_execution_policy = "Bypass"

@@ -1,0 +1,70 @@
+# tmux-cc-notification Configuration Example
+# Copy this file to .tmux_cc_notify_conf.toml and customize
+
+[assets]
+# Optional: Path to app logo image (Windows path, displayed in notification)
+# app_logo = "C:\\Users\\YourName\\Pictures\\logo.png"
+
+# Optional: Hero image for task completion notification
+# hero_image_task_end = "C:\\Users\\YourName\\Pictures\\hero.png"
+
+[text]
+# Notification title template
+# Variables: {session} = tmux session name
+title = "{session} Claude Code"
+
+# Running notification body template
+# Variables: {mm} = elapsed minutes, {prompt} = user input (truncated)
+running_body = "[Running: {mm} min] {prompt}"
+
+# Done notification body template
+done_body = "[Total: {mm} min] {prompt}"
+
+# Need input notification body (no variables)
+need_input_body = "Permission/input required"
+
+# Maximum characters for prompt display
+prompt_max_chars = 60
+
+[running]
+# Enable periodic "running" notifications
+enabled = true
+
+# Interval between notifications (minutes)
+interval_minutes = 5
+
+# Sound file path (Windows path)
+sound_path = "C:\\Windows\\Media\\chimes.wav"
+
+# Number of times to play the sound
+sound_repeat = 1
+
+# Update the same notification instead of creating new ones
+update_same_toast = true
+
+[need_input]
+# Enable "need input" notifications (permission prompts)
+enabled = true
+
+# Sound file path
+sound_path = "C:\\Windows\\Media\\notify.wav"
+
+# Number of times to play the sound (2 = more urgent)
+sound_repeat = 2
+
+[done]
+# Enable "done" notifications (task completion)
+enabled = true
+
+# Sound file path
+sound_path = "C:\\Windows\\Media\\tada.wav"
+
+# Number of times to play the sound
+sound_repeat = 1
+
+[suppress]
+# Enable notification suppression when user is viewing the task pane
+# When enabled, no notifications are sent if:
+# - Windows Terminal is the foreground window
+# - User is viewing the tmux session/window/pane where the task is running
+enabled = true
