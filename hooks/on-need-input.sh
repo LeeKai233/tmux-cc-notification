@@ -51,7 +51,7 @@ if [[ "$CC_NOTIFY_NEED_INPUT_ENABLED" != "1" ]]; then
 fi
 
 # Check if should suppress / 检查是否应该抑制
-if should_suppress "$SESSION_ID"; then
+if should_suppress "$SESSION_ID" "need_input"; then
     log_debug "Notification suppressed (user viewing pane)"
     exit 0
 fi

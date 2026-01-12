@@ -108,8 +108,12 @@ function Send-Notification {
         $WindowHandle = if ($Parts.Count -ge 2) { $Parts[1] } else { "" }
         $TabIndex = if ($Parts.Count -ge 3) { $Parts[2] } else { "" }
 
-        # 创建点击按钮，使用自定义 URI 协议
-        $Uri = "ccnotify://${TmuxPane}:${WindowHandle}:${TabIndex}"
+        # 创建点击按钮，使用自定义 URI 协议（只在 TabIndex 非空时添加）
+        if ($TabIndex) {
+            $Uri = "ccnotify://${TmuxPane}:${WindowHandle}:${TabIndex}"
+        } else {
+            $Uri = "ccnotify://${TmuxPane}:${WindowHandle}"
+        }
         $Button = New-BTButton -Content "Switch to Task" -Arguments $Uri -ActivationType Protocol
         $Actions = New-BTAction -Buttons $Button
     }

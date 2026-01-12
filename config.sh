@@ -45,6 +45,10 @@ get_config() {
         # 在目标 section 内查找 key
         if [[ $in_section -eq 1 && "$line" =~ ^${key}[[:space:]]*=[[:space:]]*(.+)$ ]]; then
             value="${BASH_REMATCH[1]}"
+            # 去除行内注释 (# 后面的内容)
+            value="${value%%#*}"
+            # 去除尾部空白
+            value="${value%"${value##*[![:space:]]}"}"
             # 去除引号
             value="${value#\"}"
             value="${value%\"}"
@@ -145,6 +149,14 @@ load_all_config() {
     # Suppress / 抑制
     export CC_NOTIFY_SUPPRESS_ENABLED
     CC_NOTIFY_SUPPRESS_ENABLED=$(get_config_bool "suppress" "enabled" "1")
+
+    # Suppress per-stage / 分阶段抑制配置
+    export CC_NOTIFY_SUPPRESS_NEED_INPUT
+    CC_NOTIFY_SUPPRESS_NEED_INPUT=$(get_config_bool "suppress" "need_input" "1")
+    export CC_NOTIFY_SUPPRESS_RUNNING
+    CC_NOTIFY_SUPPRESS_RUNNING=$(get_config_bool "suppress" "running" "1")
+    export CC_NOTIFY_SUPPRESS_DONE
+    CC_NOTIFY_SUPPRESS_DONE=$(get_config_bool "suppress" "done" "1")
 
     # SEC-2026-0112-0409 M2：PowerShell 执行策略配置
     # 默认 RemoteSigned，用户可设置为 Bypass（需显式 opt-in）

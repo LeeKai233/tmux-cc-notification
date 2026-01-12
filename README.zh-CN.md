@@ -197,13 +197,24 @@ WSL2 (Bash)                    Windows (PowerShell)
 
 ### 点击跳转不工作
 
-1. 重新运行协议注册：`pwsh -File ps/install-protocol.ps1`
+1. 重新运行协议注册：`pwsh -File ps/install-protocol-local.ps1`
 2. 检查注册表中 VBS 文件路径是否正确
 
 ### 声音不播放
 
 1. 验证声音文件路径是否存在
 2. 检查 Windows 音量设置
+
+### PowerShell 执行策略
+
+本工具需要 `Bypass` 执行策略，因为 Windows 将 WSL 文件路径（`\\wsl.localhost\...`）视为远程位置。脚本使用 `-ExecutionPolicy Bypass`，这只影响当前 PowerShell 进程，不会更改系统级策略。
+
+如果看到"脚本无法加载"或"未经数字签名"等错误：
+
+1. 确保配置文件中设置了 `pwsh_execution_policy = "Bypass"`
+2. 或复制配置模板：`cp config.example.toml .tmux_cc_notify_conf.toml`
+
+如需更严格的安全性，可以使用代码签名证书为 PowerShell 脚本签名，然后使用 `RemoteSigned` 策略。
 
 ## 许可证
 

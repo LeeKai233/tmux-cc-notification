@@ -4,7 +4,9 @@
 # SEC-2026-0112-0409 L1 修复：日志安全化
 
 CC_NOTIFY_DEBUG="${CC_NOTIFY_DEBUG:-0}"
-CC_NOTIFY_LOG_FILE="${CC_NOTIFY_LOG_FILE:-/tmp/cc-notify.log}"
+# Use XDG state dir for persistent logs
+_CC_NOTIFY_LOG_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/cc-notify"
+CC_NOTIFY_LOG_FILE="${CC_NOTIFY_LOG_FILE:-$_CC_NOTIFY_LOG_DIR/debug.log}"
 
 # 日志初始化标志
 _CC_NOTIFY_LOG_INITIALIZED=0
@@ -17,7 +19,7 @@ init_log() {
     # 确保日志目录存在
     local log_dir
     log_dir=$(dirname "$CC_NOTIFY_LOG_FILE")
-    if [[ "$log_dir" != "/tmp" && ! -d "$log_dir" ]]; then
+    if [[ ! -d "$log_dir" ]]; then
         mkdir -p "$log_dir" 2>/dev/null
         chmod 700 "$log_dir" 2>/dev/null
     fi

@@ -197,13 +197,23 @@ WSL2 (Bash)                    Windows (PowerShell)
 
 ### Click-to-focus not working
 
-1. Re-run protocol registration: `pwsh -File ps/install-protocol.ps1`
+1. Re-run protocol registration: `pwsh -File ps/install-protocol-local.ps1`
 2. Check if the VBS file path is correct in registry
 
 ### Sound not playing
 
 1. Verify the sound file path exists
 2. Check Windows volume settings
+
+### PowerShell Execution Policy
+
+This tool requires `Bypass` execution policy because Windows treats WSL file paths (`\\wsl.localhost\...`) as remote locations. The scripts use `-ExecutionPolicy Bypass` which only affects the current PowerShell process and does not change your system-wide policy.
+
+If you see errors like "script cannot be loaded" or "not digitally signed":
+1. Ensure `pwsh_execution_policy = "Bypass"` is set in your config file
+2. Or copy the config template: `cp config.example.toml .tmux_cc_notify_conf.toml`
+
+For stricter security, you can sign the PowerShell scripts with a code signing certificate and use `RemoteSigned` policy.
 
 ## License
 

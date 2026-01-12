@@ -39,7 +39,15 @@ sound_repeat = 1
 
 [suppress]
 enabled = true
+# Per-stage suppress config / 分阶段抑制配置
+need_input = true   # Suppress when viewing pane during need_input
+running = true      # Suppress when viewing pane during running
+done = true         # Suppress when viewing pane during done
 
 [security]
-# PowerShell execution policy (Bypass needed for WSL scripts)
+# PowerShell execution policy for WSL integration
+# "Bypass" is required because Windows treats WSL file paths (\\wsl.localhost\...)
+# as remote/untrusted locations. This setting only affects the current PowerShell
+# process spawned for notifications - it does NOT change system-wide policy.
+# See: https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies
 pwsh_execution_policy = "Bypass"

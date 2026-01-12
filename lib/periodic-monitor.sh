@@ -111,7 +111,7 @@ while true; do
     fi
 
     # Check if should suppress / 检查是否应该抑制
-    if should_suppress "$SESSION_ID"; then
+    if should_suppress "$SESSION_ID" "running"; then
         continue
     fi
 

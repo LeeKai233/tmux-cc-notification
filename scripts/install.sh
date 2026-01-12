@@ -142,7 +142,7 @@ fi
 # Step 3: Register URI protocol
 print_step "$MSG_REG_PROTOCOL"
 PWSH=$(find_pwsh)
-PS_INSTALL="${BASE_DIR}/ps/install-protocol.ps1"
+PS_INSTALL="${BASE_DIR}/ps/install-protocol-local.ps1"
 WIN_PS_INSTALL=$(wslpath -w "$PS_INSTALL" 2>/dev/null || echo "$PS_INSTALL")
 
 "$PWSH" -NoProfile -ExecutionPolicy Bypass -File "$WIN_PS_INSTALL" -Lang "$LANG_CODE" 2>/dev/null || {

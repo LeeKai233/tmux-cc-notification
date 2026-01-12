@@ -10,6 +10,7 @@ BASE_DIR="$(dirname "$SCRIPT_DIR")"
 # Load dependencies / 加载依赖
 source "${BASE_DIR}/config.sh"
 source "${BASE_DIR}/lib/state.sh"
+source "${BASE_DIR}/lib/suppress.sh"
 source "${BASE_DIR}/lib/pwsh.sh"
 source "${BASE_DIR}/lib/json.sh"
 source "${BASE_DIR}/lib/log.sh"
@@ -54,35 +55,40 @@ TMUX_INFO="${TMUX_PANE}:${HWND}"
 
 # Send completion notification (if enabled) / 发送完成通知（如果启用）
 if [[ "$CC_NOTIFY_DONE_ENABLED" == "1" ]]; then
-    PWSH=$(find_pwsh)
-    PS_SCRIPT="${BASE_DIR}/ps/send-toast.ps1"
-    WIN_PS_SCRIPT=$(wslpath -w "$PS_SCRIPT" 2>/dev/null || echo "$PS_SCRIPT")
+    # Check if should suppress / 检查是否应该抑制
+    if should_suppress "$SESSION_ID" "done"; then
+        log_debug "Done notification suppressed (user viewing pane)"
+    else
+        PWSH=$(find_pwsh)
+        PS_SCRIPT="${BASE_DIR}/ps/send-toast.ps1"
+        WIN_PS_SCRIPT=$(wslpath -w "$PS_SCRIPT" 2>/dev/null || echo "$PS_SCRIPT")
 
-    TITLE="${CC_NOTIFY_TITLE_TPL//\{session\}/$SESSION_NAME}"
-    BODY="${CC_NOTIFY_DONE_BODY_TPL//\{mm\}/$ELAPSED_MINUTES}"
-    BODY="${BODY//\{prompt\}/$USER_PROMPT}"
+        TITLE="${CC_NOTIFY_TITLE_TPL//\{session\}/$SESSION_NAME}"
+        BODY="${CC_NOTIFY_DONE_BODY_TPL//\{mm\}/$ELAPSED_MINUTES}"
+        BODY="${BODY//\{prompt\}/$USER_PROMPT}"
 
-    # SEC-2026-0112-0409 H1 修复：使用 Base64 安全传参
-    TITLE_B64=$(safe_encode_for_pwsh "$TITLE" 100)
-    BODY_B64=$(safe_encode_for_pwsh "$BODY" 200)
-    TMUX_INFO_B64=$(to_base64 "$TMUX_INFO")
+        # SEC-2026-0112-0409 H1 修复：使用 Base64 安全传参
+        TITLE_B64=$(safe_encode_for_pwsh "$TITLE" 100)
+        BODY_B64=$(safe_encode_for_pwsh "$BODY" 200)
+        TMUX_INFO_B64=$(to_base64 "$TMUX_INFO")
 
-    # SEC-2026-0112-0409 M2：使用配置的执行策略
-    EXEC_POLICY=$(get_execution_policy)
+        # SEC-2026-0112-0409 M2：使用配置的执行策略
+        EXEC_POLICY=$(get_execution_policy)
 
-    "$PWSH" -NoProfile -ExecutionPolicy "$EXEC_POLICY" -File "$WIN_PS_SCRIPT" \
-        -Type "done" \
-        -SessionId "$SESSION_ID" \
-        -TitleB64 "$TITLE_B64" \
-        -BodyB64 "$BODY_B64" \
-        -AppLogo "$CC_NOTIFY_APP_LOGO" \
-        -HeroImage "$CC_NOTIFY_HERO_IMAGE" \
-        -SoundPath "$CC_NOTIFY_DONE_SOUND" \
-        -SoundRepeat "$CC_NOTIFY_DONE_SOUND_REPEAT" \
-        -TmuxInfoB64 "$TMUX_INFO_B64" \
-        2>/dev/null
+        "$PWSH" -NoProfile -ExecutionPolicy "$EXEC_POLICY" -File "$WIN_PS_SCRIPT" \
+            -Type "done" \
+            -SessionId "$SESSION_ID" \
+            -TitleB64 "$TITLE_B64" \
+            -BodyB64 "$BODY_B64" \
+            -AppLogo "$CC_NOTIFY_APP_LOGO" \
+            -HeroImage "$CC_NOTIFY_HERO_IMAGE" \
+            -SoundPath "$CC_NOTIFY_DONE_SOUND" \
+            -SoundRepeat "$CC_NOTIFY_DONE_SOUND_REPEAT" \
+            -TmuxInfoB64 "$TMUX_INFO_B64" \
+            2>/dev/null
 
-    log_debug "Sent done notification"
+        log_debug "Sent done notification"
+    fi
 fi
 
 # Cleanup state / 清理状态

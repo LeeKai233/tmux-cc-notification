@@ -2,7 +2,9 @@
 # audit.sh - 安全审计日志
 # SEC-2026-0112-0409 P1-1：独立于 debug 开关的安全事件日志
 
-CC_NOTIFY_AUDIT_LOG="${CC_NOTIFY_AUDIT_LOG:-/tmp/cc-notify-audit.log}"
+# Use XDG state dir for persistent audit logs
+_CC_NOTIFY_STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/cc-notify"
+CC_NOTIFY_AUDIT_LOG="${CC_NOTIFY_AUDIT_LOG:-$_CC_NOTIFY_STATE_DIR/audit.log}"
 CC_NOTIFY_AUDIT_ENABLED="${CC_NOTIFY_AUDIT_ENABLED:-1}"
 
 # 审计日志初始化标志
@@ -12,6 +14,11 @@ _CC_NOTIFY_AUDIT_INITIALIZED=0
 init_audit() {
     [[ "$CC_NOTIFY_AUDIT_ENABLED" != "1" ]] && return 0
     [[ "$_CC_NOTIFY_AUDIT_INITIALIZED" == "1" ]] && return 0
+
+    # Create state directory if needed
+    local audit_dir
+    audit_dir=$(dirname "$CC_NOTIFY_AUDIT_LOG")
+    [[ ! -d "$audit_dir" ]] && mkdir -p "$audit_dir" && chmod 700 "$audit_dir"
 
     touch "$CC_NOTIFY_AUDIT_LOG" 2>/dev/null
     chmod 600 "$CC_NOTIFY_AUDIT_LOG" 2>/dev/null

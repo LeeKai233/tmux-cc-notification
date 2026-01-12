@@ -11,7 +11,7 @@ source "${SCRIPT_DIR}/log.sh" 2>/dev/null || true
 
 # Use constant or default / 使用常量或默认值
 # 修改：使用子目录结构而非后缀拼接
-STATE_BASE_DIR="${STATE_BASE_DIR:-/tmp/cc-notify}"
+STATE_BASE_DIR="${STATE_BASE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/cc-notify}"
 
 # Atomic write helper - prevents race conditions / 原子写入 - 防止竞态条件
 # SEC-2026-0112-0409 修复：使用 mktemp 防止竞态攻击

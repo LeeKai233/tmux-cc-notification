@@ -68,3 +68,19 @@ sound_repeat = 1
 # - Windows Terminal is the foreground window
 # - User is viewing the tmux session/window/pane where the task is running
 enabled = true
+
+[security]
+# PowerShell execution policy for running scripts
+# Options: Bypass, RemoteSigned, AllSigned
+#
+# IMPORTANT: WSL scripts require "Bypass" because Windows treats WSL file paths
+# (\\wsl.localhost\...) as remote locations. RemoteSigned would require scripts
+# to be digitally signed.
+#
+# Security note: "Bypass" only affects the current PowerShell process and does
+# not change your system-wide execution policy.
+#
+# If you prefer stricter security, you can:
+# 1. Sign the PowerShell scripts with a code signing certificate
+# 2. Change this to "RemoteSigned" or "AllSigned"
+pwsh_execution_policy = "Bypass"

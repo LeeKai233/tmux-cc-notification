@@ -6,7 +6,8 @@
 CC_NOTIFY_VERSION="1.0.0"
 
 # State management / 状态管理
-STATE_BASE_DIR="/tmp/cc-notify"
+# Use XDG cache dir for persistence across reboots
+STATE_BASE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/cc-notify"
 
 # Default intervals / 默认间隔
 DEFAULT_CHECK_INTERVAL=30           # Background monitor check interval (seconds)
