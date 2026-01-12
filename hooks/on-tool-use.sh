@@ -33,3 +33,6 @@ if is_waiting_input "$SESSION_ID"; then
     clear_waiting_input "$SESSION_ID"
     log_debug "Cleared waiting state: session=$SESSION_ID"
 fi
+
+# Update last tool use time / 更新最后工具使用时间
+update_last_tool_time "$SESSION_ID"

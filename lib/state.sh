@@ -285,6 +285,26 @@ get_wt_hwnd() {
     [[ -f "${state_dir}/wt-hwnd" ]] && cat "${state_dir}/wt-hwnd"
 }
 
+# Update last tool use time / 更新最后工具使用时间
+update_last_tool_time() {
+    local session_id="$1"
+    local state_dir
+    state_dir=$(get_state_dir "$session_id")
+    atomic_write "${state_dir}/last-tool-time" "$(date +%s)"
+}
+
+# Get last tool use time / 获取最后工具使用时间
+get_last_tool_time() {
+    local session_id="$1"
+    local state_dir
+    state_dir=$(get_state_dir "$session_id")
+    if [[ -f "${state_dir}/last-tool-time" ]]; then
+        cat "${state_dir}/last-tool-time"
+    else
+        get_task_start_time "$session_id"
+    fi
+}
+
 # Calculate elapsed minutes / 计算已运行分钟数
 get_elapsed_minutes() {
     local session_id="$1"

@@ -49,8 +49,10 @@ if [[ -z "$PWSH" ]]; then
 fi
 
 send_periodic_notification() {
-    local minutes
-    minutes=$(get_elapsed_minutes "$SESSION_ID")
+    local elapsed_minutes
+    elapsed_minutes=$(get_elapsed_minutes "$SESSION_ID")
+    # Round down to nearest interval multiple / 向下取整到通知间隔的整数倍
+    local minutes=$(( (elapsed_minutes / CC_NOTIFY_RUNNING_INTERVAL) * CC_NOTIFY_RUNNING_INTERVAL ))
 
     local user_prompt
     user_prompt=$(get_user_prompt "$SESSION_ID")
@@ -106,6 +108,12 @@ main_loop() {
             break
         fi
 
+        # Check if Claude Code process is still running / 检查进程是否还在运行
+        if ! pgrep -f "(claude|kiro-cli)" >/dev/null 2>&1; then
+            cleanup_state "$SESSION_ID"
+            break
+        fi
+
         # Check if waiting for input / 检查是否在等待输入状态
         if is_waiting_input "$SESSION_ID"; then
             continue
@@ -122,6 +130,14 @@ main_loop() {
         local now
         now=$(date +%s)
         local interval_seconds=$((CC_NOTIFY_RUNNING_INTERVAL * 60))
+
+        # Check if task is idle (no tool use for 60 seconds) / 检查任务是否空闲
+        local last_tool_time
+        last_tool_time=$(get_last_tool_time "$SESSION_ID")
+        local idle_threshold=60
+        if (( now - last_tool_time > idle_threshold )); then
+            continue  # Skip notification if idle
+        fi
 
         if (( now - last_time >= interval_seconds )); then
             send_periodic_notification
