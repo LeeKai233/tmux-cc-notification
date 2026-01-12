@@ -1,0 +1,210 @@
+openapi: 3.1.0
+info:
+  title: WSL to PowerShell Interface
+  description: |
+    Internal API specification for communication between WSL2 Bash Runtime
+    and Windows PowerShell Runtime in tmux-cc-notification.
+
+    This is not a REST API but documents the command-line interface
+    for invoking PowerShell scripts from WSL.
+  version: 1.0.0
+
+paths:
+  /send-toast:
+    post:
+      summary: Send Windows Toast Notification
+      description: |
+        Invoked as: pwsh.exe -File send-toast.ps1 [parameters]
+      operationId: sendToast
+      parameters:
+        - name: Type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [running, need_input, done, remove]
+          description: Notification type
+        - name: SessionId
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: ^[a-zA-Z0-9_-]{1,64}$
+          description: Session identifier for notification grouping
+        - name: TitleB64
+          in: query
+          schema:
+            type: string
+            format: base64
+          description: Base64-encoded notification title (preferred)
+        - name: BodyB64
+          in: query
+          schema:
+            type: string
+            format: base64
+          description: Base64-encoded notification body (preferred)
+        - name: Title
+          in: query
+          schema:
+            type: string
+          description: Plain text title (fallback)
+        - name: Body
+          in: query
+          schema:
+            type: string
+          description: Plain text body (fallback)
+        - name: AppLogo
+          in: query
+          schema:
+            type: string
+          description: Windows path to app logo image
+        - name: HeroImage
+          in: query
+          schema:
+            type: string
+          description: Windows path to hero image
+        - name: SoundPath
+          in: query
+          schema:
+            type: string
+          description: Windows path to sound file
+        - name: SoundRepeat
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+            default: 1
+          description: Number of times to play sound
+        - name: UpdateSame
+          in: query
+          schema:
+            type: string
+            enum: ["0", "1"]
+            default: "1"
+          description: Update existing notification with same tag
+        - name: TmuxInfoB64
+          in: query
+          schema:
+            type: string
+            format: base64
+          description: Base64-encoded tmux info for click action
+        - name: TmuxInfo
+          in: query
+          schema:
+            type: string
+            pattern: ^%?\d+:\d*$
+          description: Plain tmux info (fallback)
+      responses:
+        '0':
+          description: Success
+        '1':
+          description: Error (BurntToast not available or other failure)
+
+  /focus-terminal:
+    post:
+      summary: Focus Windows Terminal and Switch Pane
+      description: |
+        Invoked as: pwsh.exe -File focus-terminal.ps1 [parameters]
+      operationId: focusTerminal
+      parameters:
+        - name: TmuxPane
+          in: query
+          schema:
+            type: string
+            pattern: ^[%@]?\d+$|^[\w-]+:\d+\.\d+$|^[\w-]+$
+          description: Target tmux pane ID
+        - name: WindowHandle
+          in: query
+          schema:
+            type: string
+            pattern: ^\d+$
+          description: Windows Terminal window handle (HWND)
+      responses:
+        '0':
+          description: Success
+        '1':
+          description: Error (window not found)
+
+  /protocol-handler:
+    post:
+      summary: Handle ccnotify:// URI Protocol
+      description: |
+        Invoked by Windows when ccnotify:// URI is activated.
+        Parses URI and invokes focus-terminal.ps1.
+      operationId: protocolHandler
+      parameters:
+        - name: Uri
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: ^ccnotify://.*$
+          description: Full ccnotify:// URI
+      responses:
+        '0':
+          description: Success
+        '1':
+          description: Error (invalid URI format)
+
+  /install-protocol:
+    post:
+      summary: Register ccnotify:// URI Protocol
+      description: |
+        Invoked as: pwsh.exe -File install-protocol.ps1 [parameters]
+        Registers ccnotify:// protocol in Windows Registry.
+      operationId: installProtocol
+      parameters:
+        - name: Force
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: Skip confirmation prompt
+        - name: Uninstall
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: Remove protocol registration
+        - name: Lang
+          in: query
+          schema:
+            type: string
+            enum: [zh, en]
+          description: UI language
+      responses:
+        '0':
+          description: Success
+        '1':
+          description: Error (PowerShell not found or registry error)
+
+components:
+  schemas:
+    TmuxInfo:
+      type: string
+      description: |
+        Format: {pane_id}:{hwnd}
+        - pane_id: tmux pane identifier (e.g., %0, @1)
+        - hwnd: Windows Terminal window handle
+      example: "%0:12345678"
+
+    NotificationType:
+      type: string
+      enum:
+        - running
+        - need_input
+        - done
+        - remove
+      description: |
+        - running: Periodic progress notification (updates same toast)
+        - need_input: Input required notification (creates new toast)
+        - done: Task completion notification (clears running toast)
+        - remove: Remove all notifications for session
+
+    SessionId:
+      type: string
+      pattern: ^[a-zA-Z0-9_-]{1,64}$
+      description: |
+        Session identifier used for notification grouping.
+        Must be alphanumeric with hyphens/underscores, max 64 chars.
