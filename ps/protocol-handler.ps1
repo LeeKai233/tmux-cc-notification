@@ -1,4 +1,4 @@
-# protocol-handler.ps1 - ccnotify:// URI protocol handler
+﻿# protocol-handler.ps1 - ccnotify:// URI protocol handler
 # 接收 URI 参数并调用 focus-terminal.ps1
 # SEC-2026-0112-0409 H4 修复：TmuxPane 格式校验
 
@@ -8,7 +8,7 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # SEC-2026-0112-0409 H4 修复：校验 TmuxPane 格式
 # 仅允许：%数字、@数字、session:window.pane、纯字母数字
-function Validate-TmuxPane {
+function Test-TmuxPane {
     param([string]$Pane)
     if ([string]::IsNullOrEmpty($Pane)) {
         return $null
@@ -25,7 +25,7 @@ function Validate-TmuxPane {
 $Data = $Uri -replace "ccnotify://", "" -replace "/$", ""
 $Parts = $Data -split ":"
 
-$TmuxPane = Validate-TmuxPane $Parts[0]
+$TmuxPane = Test-TmuxPane $Parts[0]
 $WindowHandle = if ($Parts.Count -ge 2) { $Parts[1] } else { "" }
 
 # 仅在 TmuxPane 有效时调用

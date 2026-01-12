@@ -1,4 +1,4 @@
-# send-toast.ps1 - Windows Toast notification sender
+﻿# send-toast.ps1 - Windows Toast notification sender
 # 支持三种通知类型: running, need_input, done
 # SEC-2026-0112-0409 H1/H3 修复：Base64 安全传参 + Add-Type 防护
 
@@ -23,7 +23,7 @@ param(
 )
 
 # SEC-2026-0112-0409 H1 修复：Base64 解码函数
-function Decode-Base64 {
+function ConvertFrom-Base64 {
     param([string]$Encoded)
     if ([string]::IsNullOrEmpty($Encoded)) { return "" }
     try {
@@ -34,17 +34,14 @@ function Decode-Base64 {
 }
 
 # SEC-2026-0112-0409 H1 修复：优先使用 Base64 参数
-if ($TitleB64) { $Title = Decode-Base64 $TitleB64 }
-if ($BodyB64) { $Body = Decode-Base64 $BodyB64 }
-if ($TmuxInfoB64) { $TmuxInfo = Decode-Base64 $TmuxInfoB64 }
+if ($TitleB64) { $Title = ConvertFrom-Base64 $TitleB64 }
+if ($BodyB64) { $Body = ConvertFrom-Base64 $BodyB64 }
+if ($TmuxInfoB64) { $TmuxInfo = ConvertFrom-Base64 $TmuxInfoB64 }
 
 # 确保 BurntToast 模块已加载
 if (-not (Get-Module -Name BurntToast -ErrorAction SilentlyContinue)) {
     Import-Module BurntToast -ErrorAction SilentlyContinue
 }
-
-$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$FocusScript = Join-Path $ScriptDir "focus-terminal.ps1"
 
 # 生成通知 Tag
 function Get-NotificationTag {
@@ -54,8 +51,11 @@ function Get-NotificationTag {
 
 # 移除通知
 function Remove-Notification {
+    [CmdletBinding(SupportsShouldProcess)]
     param([string]$Tag)
-    Remove-BTNotification -UniqueIdentifier $Tag -ErrorAction SilentlyContinue
+    if ($PSCmdlet.ShouldProcess($Tag, "Remove notification")) {
+        Remove-BTNotification -UniqueIdentifier $Tag -ErrorAction SilentlyContinue
+    }
 }
 
 # 发送通知

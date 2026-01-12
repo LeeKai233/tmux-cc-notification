@@ -1,7 +1,8 @@
-# install-protocol.ps1 - Register ccnotify:// URI protocol
+﻿# install-protocol.ps1 - Register ccnotify:// URI protocol
 # 注册 ccnotify:// URI 协议 - 运行一次即可
 # SEC-2026-0112-0409 M4：添加路径验证、确认机制、卸载功能
 
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', 'Lang', Justification='Used in Get-UILang function')]
 param(
     [switch]$Force,
     [switch]$Uninstall,
@@ -59,16 +60,16 @@ if ($UILang -eq "zh") {
 if ($Uninstall) {
     if (Test-Path $RegPath) {
         Remove-Item -Path $RegPath -Recurse -Force
-        Write-Host $MSG_UNREGISTERED -ForegroundColor Green
+        Write-Information $MSG_UNREGISTERED -InformationAction Continue
     } else {
-        Write-Host $MSG_NOT_REGISTERED
+        Write-Information $MSG_NOT_REGISTERED -InformationAction Continue
     }
     exit 0
 }
 
 # SEC-2026-0112-0409 M4：验证 VBS 处理器存在
 if (-not (Test-Path $VbsPath)) {
-    Write-Host "$MSG_HANDLER_NOT_FOUND $VbsPath" -ForegroundColor Red
+    Write-Information "$MSG_HANDLER_NOT_FOUND $VbsPath" -InformationAction Continue
     exit 1
 }
 
@@ -77,7 +78,7 @@ $ResolvedVbsPath = Resolve-Path $VbsPath -ErrorAction SilentlyContinue
 if ($ResolvedVbsPath) {
     $ActualDir = Split-Path -Parent $ResolvedVbsPath.Path
     if ($ActualDir -ne $ScriptDir) {
-        Write-Host "$MSG_HANDLER_WRONG_DIR $ScriptDir" -ForegroundColor Red
+        Write-Information "$MSG_HANDLER_WRONG_DIR $ScriptDir" -InformationAction Continue
         exit 1
     }
 }
@@ -96,23 +97,23 @@ function Find-PowerShell {
 
 $PwshPath = Find-PowerShell
 if (-not $PwshPath) {
-    Write-Host $MSG_PWSH_NOT_FOUND -ForegroundColor Red
+    Write-Information $MSG_PWSH_NOT_FOUND -InformationAction Continue
     exit 1
 }
 
-Write-Host $MSG_REGISTERING
-Write-Host "$MSG_HANDLER $VbsPath"
-Write-Host "$MSG_POWERSHELL $PwshPath"
+Write-Information $MSG_REGISTERING -InformationAction Continue
+Write-Information "$MSG_HANDLER $VbsPath" -InformationAction Continue
+Write-Information "$MSG_POWERSHELL $PwshPath" -InformationAction Continue
 
 # SEC-2026-0112-0409 M4：用户确认机制
 if (-not $Force) {
-    Write-Host ""
-    Write-Host $MSG_CONFIRM_PROMPT -ForegroundColor Yellow
-    Write-Host "$MSG_REG_PATH $RegPath"
-    Write-Host ""
+    Write-Information "" -InformationAction Continue
+    Write-Information $MSG_CONFIRM_PROMPT -InformationAction Continue
+    Write-Information "$MSG_REG_PATH $RegPath" -InformationAction Continue
+    Write-Information "" -InformationAction Continue
     $confirm = Read-Host $MSG_CONTINUE
     if ($confirm -ne 'y' -and $confirm -ne 'Y') {
-        Write-Host $MSG_ABORTED
+        Write-Information $MSG_ABORTED -InformationAction Continue
         exit 0
     }
 }
@@ -130,7 +131,7 @@ New-Item -Path "$RegPath\shell\open\command" -Force | Out-Null
 $Command = "wscript.exe `"$VbsPath`" `"%1`""
 Set-ItemProperty -Path "$RegPath\shell\open\command" -Name "(Default)" -Value $Command
 
-Write-Host ""
-Write-Host $MSG_COMPLETE -ForegroundColor Green
-Write-Host ""
-Write-Host "$MSG_TEST_CMD Start-Process 'ccnotify://test:123:0'"
+Write-Information "" -InformationAction Continue
+Write-Information $MSG_COMPLETE -InformationAction Continue
+Write-Information "" -InformationAction Continue
+Write-Information "$MSG_TEST_CMD Start-Process 'ccnotify://test:123:0'" -InformationAction Continue

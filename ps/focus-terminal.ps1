@@ -1,4 +1,4 @@
-# focus-terminal.ps1 - Focus Windows Terminal and switch tmux pane
+﻿# focus-terminal.ps1 - Focus Windows Terminal and switch tmux pane
 # 聚焦 Windows Terminal 并切换 tmux pane - 通知点击时调用
 
 param(
