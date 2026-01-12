@@ -1,123 +1,177 @@
-# tmux-cc-notification
+<p align="center">
+  <img src="assets/logo/fish.svg" alt="tmux-cc-notification" width="120" />
+</p>
 
-Windows Toast notifications for Claude Code running in WSL2/tmux.
+<h1 align="center">tmux-cc-notification</h1>
 
-[中文文档](README.zh-CN.md)
+<p align="center">
+  <strong>🔔 Windows Toast notifications for Claude Code in WSL2/tmux</strong>
+</p>
 
-## Features
+<p align="center">
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-features">Features</a> •
+  <a href="#-installation">Installation</a> •
+  <a href="#%EF%B8%8F-configuration">Configuration</a> •
+  <a href="#-troubleshooting">Troubleshooting</a>
+</p>
 
-- **Periodic notifications**: Get notified every 5 minutes when a task is running (configurable)
-- **Input required notifications**: Instant notification when Claude needs your permission or input
-- **Task completion notifications**: Know when your task is done with a hero image
-- **Click-to-focus**: Click notification to switch to the correct tmux pane
-- **Smart suppression**: No notifications when you're already viewing the task pane
+<p align="center">
+  <a href="README.zh-CN.md">中文文档</a>
+</p>
 
-## Requirements
+---
 
-- Windows 10/11 with WSL2
-- Windows Terminal
-- PowerShell 7 ([Download](https://aka.ms/powershell))
-- [BurntToast](https://github.com/Windos/BurntToast) PowerShell module
-- tmux
-- jq (optional, for better JSON handling)
+## 💡 What is this?
 
-## Quick Start
+When running Claude Code in a tmux pane, you might miss important events while working in other windows. This tool sends **Windows Toast notifications** so you always know:
 
-```bash
-# 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/tmux-cc-notification.git
-cd tmux-cc-notification
+- ⏱️ Your task is still running (periodic updates)
+- ⚠️ Claude needs your input or permission
+- ✅ Your task is complete
 
-# 2. Run the installer (auto-configures Claude Code hooks)
-./scripts/install.sh
+**Click any notification to instantly jump back to your Claude Code pane.**
 
-# 3. Test notifications
-./scripts/test-notification.sh all
+---
+
+## 🚀 Quick Start
+
+> **Prerequisites**: Windows 10/11 with WSL2, Windows Terminal, tmux
+
+### Step 1: Install PowerShell 7 (Windows)
+
+Open PowerShell as Administrator and run:
+
+```powershell
+winget install Microsoft.PowerShell
 ```
 
-That's it! The installer automatically configures `~/.claude/settings.json`.
+Or download from [aka.ms/powershell](https://aka.ms/powershell)
 
-## Installation
+### Step 2: Install BurntToast Module (Windows)
 
-### 1. Install Dependencies
+Open PowerShell 7 (`pwsh`) and run:
 
-```bash
-# Install jq and tmux (if not already installed)
-sudo apt install jq tmux
-
-# Install BurntToast PowerShell module (run in PowerShell)
+```powershell
 Install-Module -Name BurntToast -Scope CurrentUser
 ```
 
-### 2. Run Installer
+### Step 3: Install in WSL2
 
 ```bash
+# Clone the repository
+git clone https://github.com/nicholasgcoles/tmux-cc-notification.git ~/.claude/hooks/tmux-cc-notification
+
+# Run the installer
+cd ~/.claude/hooks/tmux-cc-notification
+./scripts/install.sh
+
+# Test it works
+./scripts/test-notification.sh all
+```
+
+**Done!** 🎉 The installer automatically configures Claude Code hooks.
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| **Periodic Notifications** | Progress updates every 5 minutes (configurable) |
+| **Input Required Alerts** | Instant notification when Claude needs permission |
+| **Task Completion** | Notification with hero image when done |
+| **Click-to-Focus** | Click notification → switch to correct tmux pane |
+| **Smart Suppression** | No spam when you're already viewing the pane |
+
+---
+
+## 📦 Installation
+
+### Prerequisites Checklist
+
+| Requirement | Where | How to Check |
+|-------------|-------|--------------|
+| WSL2 | Windows | `wsl --version` |
+| Windows Terminal | Windows | Should be default terminal |
+| PowerShell 7 | Windows | `pwsh --version` |
+| BurntToast | Windows | `Get-Module -ListAvailable BurntToast` |
+| tmux | WSL2 | `tmux -V` |
+| jq (optional) | WSL2 | `jq --version` |
+
+### Install Missing Dependencies
+
+<details>
+<summary><strong>📥 Install jq and tmux in WSL2</strong></summary>
+
+```bash
+sudo apt update && sudo apt install -y jq tmux
+```
+
+</details>
+
+<details>
+<summary><strong>📥 Install PowerShell 7 on Windows</strong></summary>
+
+Option 1 - Using winget (recommended):
+
+```powershell
+winget install Microsoft.PowerShell
+```
+
+Option 2 - Manual download:
+Visit [aka.ms/powershell](https://aka.ms/powershell)
+
+</details>
+
+<details>
+<summary><strong>📥 Install BurntToast Module</strong></summary>
+
+Open PowerShell 7 (`pwsh`) and run:
+
+```powershell
+Install-Module -Name BurntToast -Scope CurrentUser -Force
+```
+
+</details>
+
+### Run the Installer
+
+```bash
+cd ~/.claude/hooks/tmux-cc-notification
 ./scripts/install.sh
 ```
 
 The installer will:
 
-- Check all dependencies
-- Register the `ccnotify://` URI protocol for click-to-focus
-- Auto-configure Claude Code hooks in `~/.claude/settings.json`
-- Send a test notification
+1. ✅ Check all dependencies
+2. ✅ Register `ccnotify://` URI protocol (for click-to-focus)
+3. ✅ Configure Claude Code hooks in `~/.claude/settings.json`
+4. ✅ Send a test notification
 
-### Manual Hook Configuration (Optional)
+---
 
-If you prefer to configure hooks manually, run:
+## ⚙️ Configuration
+
+Copy the example config and customize:
 
 ```bash
-./scripts/setup-hooks.sh
+cp config.example.toml .tmux_cc_notify_conf.toml
 ```
 
-Or add the following to your `~/.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "UserPromptSubmit": [
-      { "matcher": "", "hooks": ["/path/to/tmux-cc-notification/hooks/on-task-start.sh"] }
-    ],
-    "Notification": [
-      { "matcher": "", "hooks": ["/path/to/tmux-cc-notification/hooks/on-need-input.sh"] }
-    ],
-    "PreToolUse": [
-      { "matcher": "", "hooks": ["/path/to/tmux-cc-notification/hooks/on-tool-use.sh"] }
-    ],
-    "Stop": [
-      { "matcher": "", "hooks": ["/path/to/tmux-cc-notification/hooks/on-task-end.sh"] }
-    ]
-  }
-}
-```
-
-## Configuration
-
-Copy `config.example.toml` to `.tmux_cc_notify_conf.toml` and customize:
+### Configuration Options
 
 ```toml
-[assets]
-# Optional: Custom app logo and hero image
-# app_logo = "C:\\path\\to\\logo.png"
-# hero_image_task_end = "C:\\path\\to\\hero.png"
-
-[text]
-title = "{session} Claude Code"
-running_body = "[Running: {mm} min] {prompt}"
-done_body = "[Total: {mm} min] {prompt}"
-need_input_body = "Permission/input required"
-prompt_max_chars = 60
-
 [running]
 enabled = true
-interval_minutes = 5
+interval_minutes = 5        # How often to notify during long tasks
 sound_path = "C:\\Windows\\Media\\chimes.wav"
 sound_repeat = 1
 
 [need_input]
 enabled = true
 sound_path = "C:\\Windows\\Media\\notify.wav"
-sound_repeat = 2
+sound_repeat = 2            # Play sound twice for urgency
 
 [done]
 enabled = true
@@ -125,100 +179,141 @@ sound_path = "C:\\Windows\\Media\\tada.wav"
 sound_repeat = 1
 
 [suppress]
-enabled = true
+enabled = true              # Skip notifications when viewing the pane
+
+[text]
+title = "{session} Claude Code"
+running_body = "[Running: {mm} min] {prompt}"
+done_body = "[Total: {mm} min] {prompt}"
+need_input_body = "Permission/input required"
+prompt_max_chars = 60
 ```
 
 ### Template Variables
 
-- `{session}` - tmux session name
-- `{mm}` - elapsed minutes
-- `{prompt}` - user's input (truncated)
+| Variable | Description |
+|----------|-------------|
+| `{session}` | tmux session name |
+| `{mm}` | Elapsed minutes |
+| `{prompt}` | User's input (truncated) |
 
-## Testing
+---
+
+## 🧪 Testing
 
 ```bash
 # Test all notification types
 ./scripts/test-notification.sh all
 
-# Test specific notification
-./scripts/test-notification.sh running
-./scripts/test-notification.sh input
-./scripts/test-notification.sh done
+# Test specific types
+./scripts/test-notification.sh running   # Progress notification
+./scripts/test-notification.sh input     # Input required notification
+./scripts/test-notification.sh done      # Completion notification
+./scripts/test-notification.sh click     # Click-to-focus functionality
 
-# Test click-to-focus
-./scripts/test-notification.sh click
-
-# Cleanup test notifications
+# Clean up test notifications
 ./scripts/test-notification.sh cleanup
 ```
 
-## Debugging
+---
 
-Enable debug logging:
+## 🔧 Troubleshooting
 
-```bash
-export CC_NOTIFY_DEBUG=1
-# Logs will be written to /tmp/cc-notify.log
-```
-
-Check dependencies:
+### Check Dependencies First
 
 ```bash
 ./scripts/check-deps.sh
 ```
 
-## How It Works
+### Enable Debug Logging
 
-1. **Task Start**: When you submit a prompt to Claude Code, the hook captures the session info and starts a background monitor
-2. **Periodic Monitor**: Every 30 seconds, checks if it's time to send a progress notification (default: every 5 minutes)
-3. **Input Required**: When Claude needs permission or user input, sends an immediate notification
-4. **Task End**: Sends completion notification and cleans up
-
-### Architecture
-
-```txt
-WSL2 (Bash)                    Windows (PowerShell)
-┌─────────────────┐            ┌─────────────────┐
-│ Claude Code     │            │ BurntToast      │
-│ Hooks           │───────────▶│ Toast API       │
-│                 │            │                 │
-│ State Manager   │            │ URI Protocol    │
-│ (/tmp/cc-notify)│◀───────────│ Handler         │
-└─────────────────┘            └─────────────────┘
+```bash
+export CC_NOTIFY_DEBUG=1
+# Logs written to: $XDG_STATE_HOME/cc-notify/ or /tmp/cc-notify.log
 ```
 
-## Troubleshooting
+<details>
+<summary><strong>❌ Notifications not appearing</strong></summary>
 
-### Notifications not appearing
+1. Verify BurntToast is installed:
 
-1. Check if BurntToast is installed: `Get-Module -ListAvailable BurntToast`
-2. Check Windows notification settings for Windows Terminal
-3. Run `./scripts/check-deps.sh` to verify all dependencies
+   ```powershell
+   Get-Module -ListAvailable BurntToast
+   ```
 
-### Click-to-focus not working
+2. Check Windows notification settings:
+   - Settings → System → Notifications
+   - Ensure Windows Terminal notifications are enabled
 
-1. Re-run protocol registration: `pwsh -File ps/install-protocol-local.ps1`
-2. Check if the VBS file path is correct in registry
+3. Run dependency check:
 
-### Sound not playing
+   ```bash
+   ./scripts/check-deps.sh
+   ```
 
-1. Verify the sound file path exists
+</details>
+
+<details>
+<summary><strong>❌ Click-to-focus not working</strong></summary>
+
+1. Re-register the URI protocol:
+
+   ```bash
+   pwsh.exe -File ps/install-protocol.ps1
+   ```
+
+2. Check registry entry exists:
+
+   ```powershell
+   Get-Item "HKCU:\Software\Classes\ccnotify"
+   ```
+
+</details>
+
+<details>
+<summary><strong>❌ Sound not playing</strong></summary>
+
+1. Verify sound file exists at the configured path
 2. Check Windows volume settings
+3. Try a different sound file path
 
-### PowerShell Execution Policy
+</details>
 
-This tool requires `Bypass` execution policy because Windows treats WSL file paths (`\\wsl.localhost\...`) as remote locations. The scripts use `-ExecutionPolicy Bypass` which only affects the current PowerShell process and does not change your system-wide policy.
+<details>
+<summary><strong>❌ PowerShell execution policy errors</strong></summary>
 
-If you see errors like "script cannot be loaded" or "not digitally signed":
-1. Ensure `pwsh_execution_policy = "Bypass"` is set in your config file
+WSL paths (`\\wsl.localhost\...`) are treated as remote by Windows. The scripts use `-ExecutionPolicy Bypass` for the current process only.
+
+If you see "script cannot be loaded" errors:
+
+1. Ensure `pwsh_execution_policy = "Bypass"` in your config
 2. Or copy the config template: `cp config.example.toml .tmux_cc_notify_conf.toml`
 
-For stricter security, you can sign the PowerShell scripts with a code signing certificate and use `RemoteSigned` policy.
+</details>
 
-## License
+---
+
+## 🏗️ Architecture
+
+```txt
+WSL2 (Bash)                      Windows (PowerShell)
+┌──────────────────┐             ┌──────────────────┐
+│  Claude Code     │             │  BurntToast      │
+│  Hook Events     │────────────▶│  Toast API       │
+│                  │   pwsh.exe  │                  │
+│  State Manager   │             │  URI Protocol    │
+│  (cache files)   │◀────────────│  Handler         │
+└──────────────────┘  ccnotify:// └──────────────────┘
+```
+
+For detailed architecture documentation, see [docs/C4-Documentation/](docs/C4-Documentation/).
+
+---
+
+## 📄 License
 
 MIT License - see [LICENSE](LICENSE)
 
-## Contributing
+## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions welcome! Please feel free to submit a Pull Request.
