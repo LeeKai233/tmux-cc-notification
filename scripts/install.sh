@@ -156,7 +156,7 @@ print_step "$MSG_SETUP_HOOKS"
 
 # Step 5: Test notification
 print_step "$MSG_TEST_NOTIFY"
-"${INSTALL_DIR}/test-notification.sh" done 2>/dev/null || {
+"${INSTALL_DIR}/test-notification.sh" "done" 2>/dev/null || {
     print_warn "$MSG_TEST_FAILED"
     echo "  ${INSTALL_DIR}/test-notification.sh all"
 }

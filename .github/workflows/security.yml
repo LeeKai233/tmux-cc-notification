@@ -22,8 +22,8 @@ jobs:
       - uses: actions/checkout@v4
 
       # 运行 Semgrep 扫描
-      # p/bash: Bash 安全规则集
+      # p/ci: CI/CD 安全规则集 (includes shell/bash rules)
       # p/command-injection: 命令注入检测规则
       # --error: 发现问题时返回非零退出码
       - name: Run Semgrep
-        run: semgrep scan --config p/bash --config p/command-injection --error
+        run: semgrep scan --config p/ci --config p/command-injection --error
