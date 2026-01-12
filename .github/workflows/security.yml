@@ -1,0 +1,29 @@
+# 安全扫描工作流
+# 使用 Semgrep 检测 Shell 脚本中的安全漏洞
+name: Security
+
+# 触发条件：推送、PR 到主分支，以及每周日定时扫描
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    - cron: '0 0 * * 0'  # 每周日 UTC 00:00
+
+jobs:
+  semgrep:
+    name: Semgrep Scan
+    runs-on: ubuntu-latest
+    # 使用官方 Semgrep 容器镜像
+    container:
+      image: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+
+      # 运行 Semgrep 扫描
+      # p/bash: Bash 安全规则集
+      # p/command-injection: 命令注入检测规则
+      # --error: 发现问题时返回非零退出码
+      - name: Run Semgrep
+        run: semgrep scan --config p/bash --config p/command-injection --error

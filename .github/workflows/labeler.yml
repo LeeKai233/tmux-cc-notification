@@ -1,0 +1,24 @@
+# PR 自动标签工作流
+# 根据修改的文件自动为 PR 添加标签
+name: Labeler
+
+# 触发条件：PR 打开、同步或重新打开时
+# 使用 pull_request_target 以便在 fork 的 PR 上也能工作
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+# 权限设置
+permissions:
+  contents: read
+  pull-requests: write  # 需要写权限来添加标签
+
+jobs:
+  label:
+    name: Auto Label PR
+    runs-on: ubuntu-latest
+    steps:
+      # 根据 .github/labeler.yml 配置自动添加标签
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

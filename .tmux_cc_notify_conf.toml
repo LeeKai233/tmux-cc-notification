@@ -3,9 +3,9 @@
 
 [assets]
 # Path to app logo image (optional)
-app_logo = ""
+app_logo = "./imgs/Cleopatra.jpeg"
 # Path to hero image for task completion (optional)
-hero_image_task_end = ""
+hero_image_task_end = "./imgs/Asuka.jpeg"
 
 [text]
 # Title template ({session} = tmux session name)
@@ -40,9 +40,9 @@ sound_repeat = 1
 [suppress]
 enabled = true
 # Per-stage suppress config / 分阶段抑制配置
-need_input = true   # Suppress when viewing pane during need_input
-running = true      # Suppress when viewing pane during running
-done = true         # Suppress when viewing pane during done
+need_input = true # Suppress when viewing pane during need_input
+running = true    # Suppress when viewing pane during running
+done = true       # Suppress when viewing pane during done
 
 [security]
 # PowerShell execution policy for WSL integration

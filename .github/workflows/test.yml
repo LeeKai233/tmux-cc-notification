@@ -1,0 +1,27 @@
+# 测试工作流
+# 运行 BATS (Bash Automated Testing System) 测试套件
+name: Test
+
+# 触发条件：推送或 PR 到主分支
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  bats:
+    name: BATS Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 安装 BATS 测试框架和 jq (JSON 处理工具)
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bats jq
+
+      # 运行 tests 目录下所有 .bats 测试文件
+      - name: Run BATS tests
+        run: bats tests/*.bats

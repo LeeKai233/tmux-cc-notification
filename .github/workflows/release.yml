@@ -1,0 +1,32 @@
+# 发布工作流
+# 当推送 v* 格式的 tag 时自动创建 GitHub Release
+name: Release
+
+# 触发条件：推送以 v 开头的 tag (如 v1.0.0, v2.1.0-beta)
+on:
+  push:
+    tags:
+      - 'v*'
+
+# 需要写入权限来创建 Release
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      # fetch-depth: 0 获取完整历史，用于生成 changelog
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 自动创建 Release 并生成发布说明
+      # prerelease: tag 包含 - 时标记为预发布版本 (如 v1.0.0-beta)
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref, '-') }}

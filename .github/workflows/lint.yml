@@ -1,5 +1,8 @@
+# 代码检查工作流
+# 对 Bash 和 PowerShell 脚本进行静态分析
 name: Lint
 
+# 触发条件：推送或 PR 到主分支
 on:
   push:
     branches: [main, master]
@@ -7,6 +10,7 @@ on:
     branches: [main, master]
 
 jobs:
+  # Bash 脚本检查
   shellcheck:
     name: ShellCheck
     runs-on: ubuntu-latest
@@ -16,10 +20,12 @@ jobs:
       - name: Install ShellCheck
         run: sudo apt-get install -y shellcheck
 
+      # 查找所有 .sh 文件并检查，警告级别以上报错
       - name: Run ShellCheck on bash scripts
         run: |
           find . -name "*.sh" -type f -print0 | xargs -0 shellcheck --severity=warning
 
+  # PowerShell 脚本检查
   powershell-lint:
     name: PSScriptAnalyzer
     runs-on: windows-latest
@@ -31,6 +37,7 @@ jobs:
         run: |
           Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
 
+      # 检查所有 .ps1 文件，警告和错误级别
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |

@@ -1,0 +1,45 @@
+# PR 自动标签配置
+# 配合 .github/workflows/labeler.yml 使用
+# 参考: https://github.com/actions/labeler
+
+# hooks 目录变更 -> 添加 "hooks" 标签
+hooks:
+  - changed-files:
+      - any-glob-to-any-file: 'hooks/**/*'
+
+# lib 目录变更 -> 添加 "lib" 标签
+lib:
+  - changed-files:
+      - any-glob-to-any-file: 'lib/**/*'
+
+# PowerShell 脚本变更 -> 添加 "powershell" 标签
+powershell:
+  - changed-files:
+      - any-glob-to-any-file: 'ps/**/*'
+
+# 测试文件变更 -> 添加 "tests" 标签
+tests:
+  - changed-files:
+      - any-glob-to-any-file: 'tests/**/*'
+
+# 脚本文件变更 -> 添加 "scripts" 标签
+scripts:
+  - changed-files:
+      - any-glob-to-any-file: 'scripts/**/*'
+
+# Markdown 文档变更 -> 添加 "documentation" 标签
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: '**/*.md'
+
+# CI/CD 配置变更 -> 添加 "ci" 标签
+ci:
+  - changed-files:
+      - any-glob-to-any-file: '.github/**/*'
+
+# 项目配置文件变更 -> 添加 "config" 标签
+config:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '*.toml'
+          - '.gitignore'
