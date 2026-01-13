@@ -164,7 +164,7 @@ sequenceDiagram
     participant Start as on-task-start.sh
     participant Tool as on-tool-use.sh
     participant Input as on-need-input.sh
-    participant End as on-task-end.sh
+    participant TaskEnd as on-task-end.sh
     participant Monitor as periodic-monitor.sh
     participant State as State Files
     participant PS as PowerShell
@@ -189,10 +189,10 @@ sequenceDiagram
         Monitor->>PS: send periodic toast
     end
 
-    CC->>End: Stop (JSON)
-    End->>PS: send done toast
-    End->>State: cleanup_state()
-    End->>Monitor: kill
+    CC->>TaskEnd: Stop (JSON)
+    TaskEnd->>PS: send done toast
+    TaskEnd->>State: cleanup_state()
+    TaskEnd->>Monitor: kill
 ```
 
 ## Hook 配置
