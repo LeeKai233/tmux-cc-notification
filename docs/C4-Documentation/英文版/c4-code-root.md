@@ -4,7 +4,7 @@
 
 - **Name**: Root Configuration Module
 - **Description**: Main configuration loader and TOML parser
-- **Location**: [config.sh](../../config.sh)
+- **Location**: [config.sh](../../../config.sh)
 - **Language**: Bash (Shell Script)
 - **Purpose**: Load and parse TOML configuration file, provide configuration values with defaults
 
@@ -12,7 +12,7 @@
 
 ### config.sh
 
-**Location**: [config.sh](../../config.sh)
+**Location**: [config.sh](../../../config.sh)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|

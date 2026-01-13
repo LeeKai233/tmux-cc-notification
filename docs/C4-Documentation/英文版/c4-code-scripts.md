@@ -4,7 +4,7 @@
 
 - **Name**: Installation and Testing Scripts
 - **Description**: User-facing scripts for installation, configuration, and testing
-- **Location**: [scripts/](../../scripts/)
+- **Location**: [scripts/](../../../scripts/)
 - **Language**: Bash (Shell Script)
 - **Purpose**: Provide easy installation, hook configuration, dependency checking, and notification testing
 
@@ -12,7 +12,7 @@
 
 ### install.sh
 
-**Location**: [scripts/install.sh](../../scripts/install.sh)
+**Location**: [scripts/install.sh](../../../scripts/install.sh)
 
 **Purpose**: One-click installer that sets up the entire notification system.
 
@@ -37,7 +37,7 @@
 
 ### setup-hooks.sh
 
-**Location**: [scripts/setup-hooks.sh](../../scripts/setup-hooks.sh)
+**Location**: [scripts/setup-hooks.sh](../../../scripts/setup-hooks.sh)
 
 **Purpose**: Configure Claude Code hooks in `~/.claude/settings.json`.
 
@@ -66,7 +66,7 @@
 
 ### check-deps.sh
 
-**Location**: [scripts/check-deps.sh](../../scripts/check-deps.sh)
+**Location**: [scripts/check-deps.sh](../../../scripts/check-deps.sh)
 
 **Purpose**: Check and display dependency status.
 
@@ -82,7 +82,7 @@ Simply sources `lib/deps.sh` and calls `print_dependency_status()`.
 
 ### test-notification.sh
 
-**Location**: [scripts/test-notification.sh](../../scripts/test-notification.sh)
+**Location**: [scripts/test-notification.sh](../../../scripts/test-notification.sh)
 
 **Purpose**: Test notification functionality.
 

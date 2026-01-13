@@ -153,7 +153,7 @@ sequenceDiagram
 
 ### WSL → PowerShell Interface
 
-See [apis/wsl-powershell-api.yaml](apis/wsl-powershell-api.yaml)
+See [apis/wsl-powershell-api.yaml](../apis/wsl-powershell-api.yaml)
 
 ### URI Protocol Interface
 

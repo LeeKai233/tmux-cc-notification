@@ -4,7 +4,7 @@
 
 - **Name**: Core Library Modules
 - **Description**: Shared utility modules providing core functionality for notification system
-- **Location**: [lib/](../../lib/)
+- **Location**: [lib/](../../../lib/)
 - **Language**: Bash (Shell Script)
 - **Purpose**: Provides reusable functions for state management, notification sending, input validation, logging, and cross-platform PowerShell integration
 
@@ -12,7 +12,7 @@
 
 ### constants.sh
 
-**Location**: [lib/constants.sh](../../lib/constants.sh)
+**Location**: [lib/constants.sh](../../../lib/constants.sh)
 
 | Function/Variable | Type | Description |
 |-------------------|------|-------------|
@@ -25,7 +25,7 @@
 
 ### state.sh
 
-**Location**: [lib/state.sh](../../lib/state.sh)
+**Location**: [lib/state.sh](../../../lib/state.sh)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
@@ -54,7 +54,7 @@
 
 ### notify.sh
 
-**Location**: [lib/notify.sh](../../lib/notify.sh)
+**Location**: [lib/notify.sh](../../../lib/notify.sh)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
@@ -72,7 +72,7 @@
 
 ### pwsh.sh
 
-**Location**: [lib/pwsh.sh](../../lib/pwsh.sh)
+**Location**: [lib/pwsh.sh](../../../lib/pwsh.sh)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
@@ -83,7 +83,7 @@
 
 ### suppress.sh
 
-**Location**: [lib/suppress.sh](../../lib/suppress.sh)
+**Location**: [lib/suppress.sh](../../../lib/suppress.sh)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
@@ -95,7 +95,7 @@
 
 ### periodic-monitor.sh
 
-**Location**: [lib/periodic-monitor.sh](../../lib/periodic-monitor.sh)
+**Location**: [lib/periodic-monitor.sh](../../../lib/periodic-monitor.sh)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
@@ -115,7 +115,7 @@
 
 ### validate.sh
 
-**Location**: [lib/validate.sh](../../lib/validate.sh)
+**Location**: [lib/validate.sh](../../../lib/validate.sh)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
@@ -125,7 +125,7 @@
 
 ### sanitize.sh
 
-**Location**: [lib/sanitize.sh](../../lib/sanitize.sh)
+**Location**: [lib/sanitize.sh](../../../lib/sanitize.sh)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
@@ -137,7 +137,7 @@
 
 ### json.sh
 
-**Location**: [lib/json.sh](../../lib/json.sh)
+**Location**: [lib/json.sh](../../../lib/json.sh)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
@@ -148,7 +148,7 @@
 
 ### log.sh
 
-**Location**: [lib/log.sh](../../lib/log.sh)
+**Location**: [lib/log.sh](../../../lib/log.sh)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
@@ -162,7 +162,7 @@
 
 ### audit.sh
 
-**Location**: [lib/audit.sh](../../lib/audit.sh)
+**Location**: [lib/audit.sh](../../../lib/audit.sh)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|
@@ -177,7 +177,7 @@
 
 ### deps.sh
 
-**Location**: [lib/deps.sh](../../lib/deps.sh)
+**Location**: [lib/deps.sh](../../../lib/deps.sh)
 
 | Function | Signature | Description |
 |----------|-----------|-------------|

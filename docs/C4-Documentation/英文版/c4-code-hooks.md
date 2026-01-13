@@ -4,7 +4,7 @@
 
 - **Name**: Claude Code Hook Scripts
 - **Description**: Event handler scripts that integrate with Claude Code's hook system
-- **Location**: [hooks/](../../hooks/)
+- **Location**: [hooks/](../../../hooks/)
 - **Language**: Bash (Shell Script)
 - **Purpose**: Respond to Claude Code lifecycle events (task start, tool use, input required, task end) to trigger notifications and manage state
 
@@ -12,7 +12,7 @@
 
 ### on-task-start.sh
 
-**Location**: [hooks/on-task-start.sh](../../hooks/on-task-start.sh)
+**Location**: [hooks/on-task-start.sh](../../../hooks/on-task-start.sh)
 
 **Hook Type**: `UserPromptSubmit`
 
@@ -42,7 +42,7 @@ stdin (JSON) → validate_json → parse_session_id → set_task_start
 
 ### on-tool-use.sh
 
-**Location**: [hooks/on-tool-use.sh](../../hooks/on-tool-use.sh)
+**Location**: [hooks/on-tool-use.sh](../../../hooks/on-tool-use.sh)
 
 **Hook Type**: `PreToolUse`
 
@@ -69,7 +69,7 @@ stdin (JSON) → validate_json → parse_session_id → clear_waiting_input
 
 ### on-need-input.sh
 
-**Location**: [hooks/on-need-input.sh](../../hooks/on-need-input.sh)
+**Location**: [hooks/on-need-input.sh](../../../hooks/on-need-input.sh)
 
 **Hook Type**: `Notification` (matcher: `permission_prompt|elicitation_dialog`)
 
@@ -101,7 +101,7 @@ stdin (JSON) → validate_json → parse_session_id → is_waiting_input?
 
 ### on-task-end.sh
 
-**Location**: [hooks/on-task-end.sh](../../hooks/on-task-end.sh)
+**Location**: [hooks/on-task-end.sh](../../../hooks/on-task-end.sh)
 
 **Hook Type**: `Stop`
 

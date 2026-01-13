@@ -4,7 +4,7 @@
 
 - **Name**: PowerShell Scripts
 - **Description**: Windows-side scripts for toast notifications and window management
-- **Location**: [ps/](../../ps/)
+- **Location**: [ps/](../../../ps/)
 - **Language**: PowerShell 7
 - **Purpose**: Interface with Windows Toast API (BurntToast), handle URI protocol, and manage window focus
 
@@ -12,7 +12,7 @@
 
 ### send-toast.ps1
 
-**Location**: [ps/send-toast.ps1](../../ps/send-toast.ps1)
+**Location**: [ps/send-toast.ps1](../../../ps/send-toast.ps1)
 
 **Purpose**: Main notification sender - creates and displays Windows Toast notifications.
 
@@ -53,7 +53,7 @@
 
 ### focus-terminal.ps1
 
-**Location**: [ps/focus-terminal.ps1](../../ps/focus-terminal.ps1)
+**Location**: [ps/focus-terminal.ps1](../../../ps/focus-terminal.ps1)
 
 **Purpose**: Focus Windows Terminal window and switch to target tmux pane.
 
@@ -84,7 +84,7 @@
 
 ### protocol-handler.ps1
 
-**Location**: [ps/protocol-handler.ps1](../../ps/protocol-handler.ps1)
+**Location**: [ps/protocol-handler.ps1](../../../ps/protocol-handler.ps1)
 
 **Purpose**: Handle `ccnotify://` URI protocol - parse URI and invoke focus-terminal.ps1.
 
@@ -104,7 +104,7 @@
 
 ### install-protocol.ps1
 
-**Location**: [ps/install-protocol.ps1](../../ps/install-protocol.ps1)
+**Location**: [ps/install-protocol.ps1](../../../ps/install-protocol.ps1)
 
 **Purpose**: Register `ccnotify://` URI protocol in Windows Registry.
 
@@ -127,7 +127,7 @@
 
 ### install-protocol-local.ps1
 
-**Location**: [ps/install-protocol-local.ps1](../../ps/install-protocol-local.ps1)
+**Location**: [ps/install-protocol-local.ps1](../../../ps/install-protocol-local.ps1)
 
 **Purpose**: Non-interactive version of install-protocol.ps1 for automated installation.
 
